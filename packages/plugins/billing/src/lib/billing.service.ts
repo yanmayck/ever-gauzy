@@ -167,4 +167,22 @@ export class BillingService {
       })
     ];
   }
+
+  /**
+   * Cria uma assinatura de teste para um novo tenant
+   */
+  async createTrialSubscription(tenantId: string): Promise<Subscription> {
+    const trialDays = parseInt(process.env.TRIAL_DAYS || '7', 10);
+    const trialEnd = new Date();
+    trialEnd.setDate(trialEnd.getDate() + trialDays);
+
+    const newSubscription = new Subscription({
+      tenantId,
+      status: SubscriptionStatusEnum.TRIAL,
+      trialEnd: trialEnd,
+      currentPeriodEnd: trialEnd
+    });
+
+    return this.subscriptionRepository.save(newSubscription);
+  }
 }

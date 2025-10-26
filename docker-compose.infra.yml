@@ -95,6 +95,7 @@ services:
     image: opensearchproject/opensearch:latest
     container_name: opensearch
     environment:
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD:-Gauzy_password_123}
       - discovery.type=single-node
       - http.port=9200
       - http.cors.enabled=true
