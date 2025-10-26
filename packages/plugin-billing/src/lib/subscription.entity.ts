@@ -1,3 +1,5 @@
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+
 export enum SubscriptionStatusEnum {
   TRIAL = 'trial',
   ACTIVE = 'active',
@@ -8,48 +10,65 @@ export enum SubscriptionStatusEnum {
   INCOMPLETE_EXPIRED = 'incomplete_expired'
 }
 
-export interface ISubscription {
-  id?: string;
-  tenantId?: string;
-  organizationId?: string;
-  status: SubscriptionStatusEnum;
-  stripeSubscriptionId?: string;
-  stripeCustomerId?: string;
-  planId?: string;
-  planName?: string;
-  amount?: number;
-  currency?: string;
-  currentPeriodStart?: Date;
-  currentPeriodEnd?: Date;
-  trialEnd?: Date;
-  cancelAt?: Date;
-  canceledAt?: Date;
-  endedAt?: Date;
-  cancelReason?: string;
-  metadata?: string;
-}
+@Entity('subscription')
+export class Subscription {
 
-export class Subscription implements ISubscription {
+  @PrimaryGeneratedColumn('uuid')
   id?: string;
+
+  @Index()
+  @Column()
   tenantId?: string;
+
+  @Column({ nullable: true })
   organizationId?: string;
+
+  @Column({ type: 'enum', enum: SubscriptionStatusEnum })
   status: SubscriptionStatusEnum;
+
+  @Column({ nullable: true })
   stripeSubscriptionId?: string;
+
+  @Column({ nullable: true })
   stripeCustomerId?: string;
+
+  @Column({ nullable: true })
   planId?: string;
+
+  @Column({ nullable: true })
   planName?: string;
+
+  @Column({ type: 'decimal', nullable: true })
   amount?: number;
+
+  @Column({ nullable: true })
   currency?: string;
+
+  @Column({ type: 'timestamp', nullable: true })
   currentPeriodStart?: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
   currentPeriodEnd?: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
   trialEnd?: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
   cancelAt?: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
   canceledAt?: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
   endedAt?: Date;
+
+  @Column({ type: 'text', nullable: true })
   cancelReason?: string;
+
+  @Column({ type: 'jsonb', nullable: true })
   metadata?: string;
 
-  constructor(data: Partial<ISubscription> = {}) {
+  constructor(data: Partial<Subscription> = {}) {
     Object.assign(this, data);
   }
 }
